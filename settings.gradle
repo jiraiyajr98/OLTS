@@ -1,0 +1,3 @@
+rootProject.name='OLTS'
+include ':app'
+include ':openCVLibrary343'
