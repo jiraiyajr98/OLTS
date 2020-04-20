@@ -10,10 +10,10 @@
         android:id="@+id/camera_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="44dp"
         android:text="Open Camera"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.055"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cropImageView" />
 
@@ -32,22 +32,60 @@
         android:id="@+id/threshold_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginStart="12dp"
         android:text="Threshold"
-        app:layout_constraintEnd_toEndOf="@+id/camera_button"
-        app:layout_constraintStart_toStartOf="@+id/camera_button"
-        app:layout_constraintTop_toBottomOf="@+id/camera_button" />
+        app:layout_constraintBottom_toBottomOf="@+id/camera_button"
+        app:layout_constraintStart_toEndOf="@+id/camera_button"
+        app:layout_constraintTop_toTopOf="@+id/camera_button"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/contours_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:text="Draw  Contours"
-        app:layout_constraintEnd_toEndOf="@+id/threshold_button"
+        app:layout_constraintBottom_toBottomOf="@+id/threshold_button"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/threshold_button"
-        app:layout_constraintTop_toBottomOf="@+id/threshold_button" />
+        app:layout_constraintStart_toEndOf="@+id/threshold_button"
+        app:layout_constraintTop_toTopOf="@+id/threshold_button"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/ocr_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="28dp"
+        android:text="OCR"
+        app:layout_constraintStart_toStartOf="@+id/camera_button"
+        app:layout_constraintTop_toBottomOf="@+id/camera_button" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Text Will Appear Here"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/ocr_button"
+        app:layout_constraintHorizontal_bias="0.455"
+        app:layout_constraintStart_toStartOf="@+id/ocr_button"
+        app:layout_constraintTop_toBottomOf="@+id/ocr_button"
+        app:layout_constraintVertical_bias="0.242" />
+
+    <Button
+        android:id="@+id/translate_online_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Online Translation"
+        app:layout_constraintBottom_toBottomOf="@+id/ocr_button"
+        app:layout_constraintEnd_toEndOf="@+id/contours_button"
+        app:layout_constraintHorizontal_bias="0.205"
+        app:layout_constraintStart_toEndOf="@+id/ocr_button"
+        app:layout_constraintTop_toTopOf="@+id/ocr_button"
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
