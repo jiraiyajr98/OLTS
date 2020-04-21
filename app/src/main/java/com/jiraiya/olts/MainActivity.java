@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -48,9 +49,14 @@ import org.tensorflow.lite.Interpreter;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.text.Normalizer;
@@ -84,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView ocrResult;
 
 
+
+
+
     static {
 
         if (OpenCVLoader.initDebug()) {
@@ -109,6 +118,9 @@ public class MainActivity extends AppCompatActivity {
         Button onlineTranslateButton = findViewById(R.id.translate_online_button);
 
         executor = Executors.newSingleThreadExecutor();
+
+
+        //fileSaveLocation =  MainActivity.this.getFilesDir()+File.separator+"eng.traineddata";
 
         requestPermission();
         loadJson();
@@ -469,7 +481,6 @@ public class MainActivity extends AppCompatActivity {
                 ).withListener(new MultiplePermissionsListener() {
             @Override
             public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-                Toast.makeText(MainActivity.this, "Granted", Toast.LENGTH_SHORT).show();
                 hasPermission = true;
             }
 
@@ -567,9 +578,56 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void setupOCR(){
+
+        File folder = new File(Environment.getExternalStorageDirectory() + "/classlinkp/tessdata");
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+
+        File saving = new File(folder, "eng.traineddata");
+        try {
+            saving.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        InputStream stream = null;
+        try {
+            stream = MainActivity.this.getAssets().open("eng.traineddata", AssetManager.ACCESS_STREAMING);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        if (stream != null){
+            copyInputStreamToFile(stream, saving);
+        }
+    }
+
+    private void copyInputStreamToFile( InputStream in, File file ) {
+        try {
+            OutputStream out = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int len;
+            while((len=in.read(buf))>0){
+                out.write(buf,0,len);
+            }
+            out.close();
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private Callable<String> getText(final Bitmap bitmap) {
 
-        //prepareTessData();
+
+        setupOCR();
+
+        //Log.d(TAG,loadTeseractFile.getPath());
+        //Log.d(TAG,loadTeseractFile.getAbsolutePath());
 
         return new Callable<String>() {
             @Override
@@ -579,9 +637,9 @@ public class MainActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());
                 }
-                String dataPath = getExternalFilesDir("/").getPath() + "/";
+
                 try {
-                    tessBaseAPI.init(dataPath, "eng");
+                    tessBaseAPI.init(Environment.getExternalStorageDirectory() + "/classlinkp","eng");
                     tessBaseAPI.setImage(bitmap);
                 } catch (RuntimeException e) {
                     e.printStackTrace();
@@ -641,6 +699,7 @@ public class MainActivity extends AppCompatActivity {
         long declaredLength = fileDescriptor.getDeclaredLength();
         return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
     }
+
 
     /**
      * @param name = File Name
